@@ -34,19 +34,41 @@ public final class WebDriverInjectorExtensions {
   }
 
   /**
+   * Execute an asynchronous JavaScript command.
+   *
+   * @param command The command to be executed.
+   * @param args Additional arguments to be provided to the command.
+   * @return the results that would normally be provided to the asynchronous commands callback.
+   */
+  public static Object executeAsyncScript(final WebDriver webDriver, final String command,
+      final Object... args) {
+    return ((JavascriptExecutor) webDriver).executeAsyncScript(command, args);
+  }
+
+  /**
    * Injects Axe script into frames.
    * @param driver WebDriver instance to inject into
    * @param scriptProvider Provider that get the aXe script to inject
    * @throws OperationNotSupportedException if the operation errors out
    */
   public static void inject(final WebDriver driver,
-      final IAxeScriptProvider scriptProvider)
+      final IAxeScriptProvider scriptProvider) 
       throws OperationNotSupportedException, IOException {
     if (scriptProvider == null) {
       throw new NullPointerException("the Script provider is null");
     }
 
     String script = scriptProvider.getScript();
+    inject(driver, script);
+  }
+
+  /**
+   * Injects Axe script into frames.
+   * @param driver WebDriver instance to inject into
+   * @param script The script to inject
+   */
+  public static void inject(final WebDriver driver,
+      final String script) {
     List<WebElement> parents = new ArrayList<>();
     JavascriptExecutor js = (JavascriptExecutor) driver;
 
